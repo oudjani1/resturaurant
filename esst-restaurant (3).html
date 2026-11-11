@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESST Restaurant - Campus Canteen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ Base ============ */
+:root{
+  /* Re-theme the whole site by editing only the colours in this block */
+  --accent:#16406b; --accent-dark:#0f2f50; --accent-rgb:22,64,107;    /* buttons, links, prices */
+  --deep:#13293f;   --deep-rgb:19,41,63;                               /* dark sections */
+  --deeper:#0b1826; --deeper-rgb:11,24,38;                             /* header + footer */
+  --gold:#c8a24c;                                                     /* accent colour on dark backgrounds */
+  --bg:#f7f8fa; --bg-alt:#eff2f6; --tint:#e8eef4; --line:#d8e0e9;      /* light backgrounds + borders */
+  --ink:#131a22; --ink-rgb:19,26,34; --muted:#5b6773; --on-dark:#c4d2df;
+  --ok-bg:#e3f0e9; --ok-ink:#1d5c36; --warn-bg:#fbeceb; --warn-ink:#a12622;
+  --head:"Manrope", system-ui, sans-serif;
+  --body:"Inter", system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{font-family:var(--body);font-size:16px;line-height:1.6;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.site-header :focus-visible,.hero :focus-visible,.hours :focus-visible,.site-footer :focus-visible{outline-color:#fff}
+.wrap{width:min(1180px,92%);margin-inline:auto}
+.icon{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.125em;flex:none}
+.eyebrow{font:700 12.5px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.02em}
+h2{font-weight:800;font-size:clamp(30px,4.2vw,48px);line-height:1.1;margin-top:10px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 24px;border-radius:10px;font:600 16px var(--body);transition:.2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{border:1.5px solid var(--accent);color:var(--accent)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+.btn-light{background:#fff;border:1px solid var(--line)}
+.btn-light:hover{border-color:var(--accent)}
+.block{width:100%}
+
+/* ============ Header ============ */
+.site-header{
+  position:sticky;top:0;z-index:50;color:#fff;
+  background:var(--deeper);
+  box-shadow:0 10px 30px -22px rgba(var(--deeper-rgb),.9);
+}
+.nav{display:flex;align-items:center;gap:24px;height:72px}
+.brand{display:flex;align-items:center;gap:12px;font:800 21px var(--head);letter-spacing:-.01em}
+.logo{position:relative;width:44px;height:44px;border-radius:8px;background:#fff;color:var(--deep);display:grid;place-items:center;font:800 15px var(--head);overflow:hidden}
+.logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nav-links{display:flex;gap:28px;margin-left:auto;font-weight:600;font-size:15px}
+.nav-links a{display:block;padding:25px 0 22px;border-bottom:2px solid transparent;opacity:.82}
+.nav-links a:hover,.nav-links a.active{border-color:var(--gold);opacity:1}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.cart-btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:600;font-size:15px;transition:.2s}
+.cart-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.7)}
+.badge{min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--accent);color:#fff;font:700 12px var(--body);display:grid;place-items:center}
+.cart-btn .badge{background:var(--gold);color:var(--deeper)}
+.link-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;font-weight:600;font-size:15px}
+.link-btn:hover{color:var(--gold)}
+#loginLabel{display:inline-block;max-width:13ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+
+/* ============ Hero ============ */
+.hero{
+  background:linear-gradient(165deg,var(--deep),var(--deeper));
+  padding:92px 0 100px;color:#fff
+}
+.hero-inner{max-width:780px}
+.hero .eyebrow{color:var(--gold)}
+.hero h1{font-weight:800;font-size:clamp(36px,5.4vw,64px);line-height:1.05;margin:16px 0 20px}
+.hero h1 .accent{color:var(--gold);display:block}
+.hero p.lead{color:var(--on-dark);font-size:18px;max-width:34em}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin:32px 0 30px}
+.hero .btn-primary{background:#fff;color:var(--deep)}
+.hero .btn-primary:hover{background:var(--tint)}
+.hero .btn-ghost{border-color:rgba(255,255,255,.55);color:#fff}
+.hero .btn-ghost:hover{background:#fff;color:var(--deep);border-color:#fff}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 28px;font-weight:500;color:var(--on-dark);font-size:15px}
+.hero-meta span{display:inline-flex;align-items:center;gap:8px}
+.hero-meta .icon{color:var(--gold)}
+
+/* ============ How it works ============ */
+.section{padding:80px 0}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px}
+.step-num{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.step-num .circle{width:48px;height:48px;border-radius:12px;background:var(--tint);color:var(--accent);display:grid;place-items:center;font-size:22px}
+.step-num .n{font:800 34px var(--head);color:var(--line);line-height:1}
+.step h3{font-weight:800;font-size:21px;line-height:1.25;margin-bottom:8px}
+.step p{color:var(--muted)}
+
+/* ============ Menu ============ */
+.menu{background:var(--bg-alt)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 34px}
+.chip{padding:9px 18px;border-radius:8px;background:#fff;border:1px solid var(--line);font:600 15px var(--body)}
+.chip b{font-weight:600;opacity:.55;margin-left:6px}
+.chip:hover{border-color:var(--accent)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.menu-layout{display:grid;grid-template-columns:1fr 380px;gap:30px;align-items:start}
+.dishes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+.empty{grid-column:1/-1;padding:40px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--muted);text-align:center}
+.dish{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.dish-img{position:relative;height:170px;display:grid;place-items:center;background:var(--tint);color:var(--accent);overflow:hidden}
+.dish-ph{font-size:52px;opacity:.28;display:grid}
+.dish-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;background:var(--warn-bg);color:var(--warn-ink);font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase}
+.prep{position:absolute;left:12px;bottom:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:#fff;color:var(--ink);font:600 12.5px var(--body)}
+.dish-body{position:relative;flex:1;padding:18px 20px 76px}
+.dish-body h3{font-weight:800;font-size:18px;line-height:1.25}
+.price{font:800 22px var(--head);color:var(--accent);margin:4px 0 6px}
+.desc{color:var(--muted);font-size:15px}
+.add{position:absolute;right:18px;bottom:18px;width:44px;height:44px;border-radius:10px;background:var(--accent);color:#fff;font-size:26px;line-height:1;transition:.15s}
+.add:hover{background:var(--accent-dark)}
+
+/* ticket panel */
+.ticket-panel{position:sticky;top:92px;max-height:calc(100vh - 112px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 40px -30px rgba(var(--ink-rgb),.45)}
+.tp-top{padding:24px 26px 18px}
+.tp-top h3{font-weight:800;font-size:26px;line-height:1.15;margin-top:4px}
+.tray-empty{margin:0 26px 22px;padding:18px;background:var(--tint);border-radius:12px;color:var(--muted);font-size:15px}
+.tray-list{list-style:none;display:grid;gap:14px;padding:0 26px 20px}
+.tray-list li{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.tray-list .nm{font-weight:600}
+.tray-list small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+.qty{display:inline-flex;align-items:center;gap:10px}
+.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);font-weight:600;font-size:17px;line-height:1}
+.qty button:hover{border-color:var(--accent);color:var(--accent)}
+.tear{border-top:1px solid var(--line)}
+.tp-bottom{padding:22px 26px 26px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 20px}
+.mode{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;text-align:left;font:600 14.5px/1.3 var(--body)}
+.mode .icon{font-size:22px;color:var(--accent)}
+.mode.active{border-color:var(--accent);background:var(--tint)}
+.label{display:block;font:700 15px var(--head);margin-bottom:8px}
+.field{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font:inherit;color:var(--ink)}
+.field:focus{outline:none;border-color:var(--accent)}
+textarea.field{resize:vertical;margin-top:14px}
+.hint{margin:8px 0 0;font-size:14px;color:var(--muted)}
+.status{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;border-radius:10px;background:#eef1ef;color:var(--muted);font-weight:600;font-size:15px}
+.status.ok{background:var(--ok-bg);color:var(--ok-ink)}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 16px}
+.total span{font:700 17px var(--head)}
+.total strong{font:800 36px var(--head);letter-spacing:-.03em;color:var(--accent)}
+.fine{margin-top:12px;font-size:13px;color:var(--muted);text-align:center}
+.done{padding:32px 26px 28px;text-align:center}
+.done .check{width:60px;height:60px;margin:0 auto 16px;border-radius:50%;background:var(--ok-bg);color:var(--ok-ink);display:grid;place-items:center;font-size:28px}
+.done h3{font-weight:800;font-size:26px;margin-bottom:8px}
+.done p{color:var(--muted)}
+.done dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:20px 0 24px;text-align:left;padding:16px 18px;background:var(--tint);border-radius:12px}
+.done dt{color:var(--muted)}
+.done dd{font-weight:700;text-align:right}
+
+/* ============ Hours ============ */
+.hours{background:var(--deep);color:#fff;padding:80px 0}
+.hours .eyebrow{color:var(--gold)}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hours h2{color:#fff}
+.info-cards{display:grid;gap:16px}
+.info{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:22px 26px}
+.info .icon{font-size:24px;color:var(--gold)}
+.info small{display:block;margin-top:10px;font:600 12px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark)}
+.info strong{display:block;font:800 24px/1.25 var(--head);letter-spacing:-.01em}
+.info strong em{font-style:normal;color:var(--gold)}
+
+/* ============ Footer ============ */
+.site-footer{background:var(--deeper);color:#d7e0e9;padding:56px 0 28px}
+.foot-brand{color:#fff}
+.site-footer p.tag-line{margin:16px 0 0;color:#9fadc0;max-width:30em;font-size:16px}
+.copy{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14);color:#7f8fa3;font-size:14px}
+
+/* ============ Log in dialog ============ */
+dialog{margin:auto;border:0;border-radius:16px;padding:28px;width:min(420px,92vw);background:#fff;color:var(--ink);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(var(--deeper-rgb),.6)}
+dialog h3{font-weight:800;font-size:25px;margin-bottom:6px}
+dialog p{color:var(--muted);font-size:15px;margin-bottom:18px}
+.dlg-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.fld{margin-bottom:16px}
+.pw{position:relative}
+.pw .field{padding-right:80px}
+.pw-toggle{position:absolute;top:50%;right:8px;transform:translateY(-50%);padding:6px 10px;border-radius:8px;font:600 14px var(--body);color:var(--accent)}
+.pw-toggle:hover{background:var(--tint)}
+.msg{min-height:24px;margin:0 0 4px;font-size:14px;font-weight:600;color:#b42318}
+.msg.ok{color:var(--ok-ink)}
+.demo-note{margin:16px 0 0;font-size:13px;color:var(--muted)}
+
+/* ============ Responsive ============ */
+@media (max-width:1000px){
+  .nav{gap:16px}
+  .nav-links{gap:20px}
+  .hours-grid,.menu-layout{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .ticket-panel{position:static;max-height:none}
+}
+@media (max-width:760px){
+  .nav-links{display:none}
+  .nav{gap:12px}
+  .brand{font-size:19px}
+  .nav-actions{margin-left:auto}
+  .section,.hours{padding:56px 0}
+  .hero{padding:60px 0 68px}
+}
+@media (max-width:520px){
+  .nav{gap:8px}
+  .brand{font-size:17px;gap:10px;min-width:0}
+  .nav-actions{gap:2px;min-width:0}
+  .cart-btn{padding:8px 12px}
+  .link-btn{padding:10px 8px}
+  #loginLabel{display:inline-block;max-width:7ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+}
+@media (max-width:420px){
+  .brand{font-size:16px;gap:8px}
+  .logo{width:40px;height:40px;font-size:14px}
+  .cart-btn{padding:8px 10px;gap:6px}
+  .link-btn{gap:6px;padding:10px 6px}
+  #loginLabel{max-width:8ch}
+  #loginLabel .hi{display:none}
+}
+@media (max-width:400px){
+  .brand > span:not(.logo){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><path d="M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+</svg>
+
+<!-- ============ Header ============ -->
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="ESST Restaurant home">
+      <span class="logo"><img src="images/logo.png" alt="" onerror="this.remove()">esst</span>
+      <span>ESST Restaurant</span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#menu">Menu</a>
+      <a href="#how">How it works</a>
+      <a href="#hours">Hours</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="cart-btn" href="#ticket" aria-label="Open your tray">
+        <svg class="icon"><use href="#i-bag"/></svg> Cart
+        <span class="badge" id="cartCount" hidden>0</span>
+      </a>
+      <button class="link-btn" id="loginBtn" type="button"><svg class="icon"><use href="#i-user"/></svg><span id="loginLabel">Log in</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <p class="eyebrow">ESST Restaurant &middot; Campus Canteen</p>
+      <h1>Order before class. <span class="accent">Eat right after.</span></h1>
+      <p class="lead">Pick your plates between lectures, choose when you want them, and your tray is waiting at the ESST counter. Skip the line, keep your break.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#menu" data-mode="class"><svg class="icon"><use href="#i-cal"/></svg> Order for after class</a>
+        <a class="btn btn-ghost" href="#menu" data-mode="now">Order now <svg class="icon"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="hero-meta">
+        <span><svg class="icon"><use href="#i-clock"/></svg> Sun&ndash;Thu 07:30&ndash;17:00</span>
+        <span><svg class="icon"><use href="#i-pin"/></svg> Main building, ground floor</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ How it works ============ -->
+<section class="section" id="how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>Lunch in three<br>simple steps.</h2>
+    <div class="steps">
+      <article class="step">
+        <div class="step-num"><span class="circle"><svg class="icon"><use href="#i-fork"/></svg></span><span class="n">01</span></div>
+        <h3>Choose your dishes</h3>
+        <p>Browse today's menu and add items to your tray. Every price is shown upfront.</p>
+      </article>
+      <article class="step">
+        <div class="step-num"><span class="circle"><svg class="icon"><use href="#i-clock"/></svg></span><span class="n">02</span></div>
+        <h3>Set your pickup time</h3>
+        <p>Pick the time your lecture ends and the kitchen prepares your meal to be fresh and hot then.</p>
+      </article>
+      <article class="step">
+        <div class="step-num"><span class="circle"><svg class="icon"><use href="#i-bag"/></svg></span><span class="n">03</span></div>
+        <h3>Collect your tray</h3>
+        <p>Your order is waiting at the counter. No queue, straight to a seat.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Menu ============ -->
+<section class="section menu" id="menu">
+  <div class="wrap">
+    <p class="eyebrow">Today's menu</p>
+    <h2>Ready in a few taps.</h2>
+    <div class="chips" id="chips" role="group" aria-label="Menu categories"></div>
+
+    <div class="menu-layout">
+      <div class="dishes" id="dishes"></div>
+
+      <aside class="ticket-panel" id="ticket" aria-label="Your pickup ticket">
+        <div id="trayForm">
+          <div class="tp-top">
+            <p class="eyebrow">Your pickup ticket</p>
+            <h3 id="trayTitle">Empty tray</h3>
+          </div>
+          <p class="tray-empty" id="trayEmpty">Your tray is empty. Add dishes from the menu, then set your pickup time.</p>
+          <ul class="tray-list" id="trayList"></ul>
+          <div class="tear"></div>
+          <div class="tp-bottom">
+            <p class="eyebrow">When do you want it?</p>
+            <div class="modes">
+              <button class="mode active" type="button" data-mode="class"><svg class="icon"><use href="#i-cal"/></svg>Ready when my class ends</button>
+              <button class="mode" type="button" data-mode="now"><svg class="icon"><use href="#i-clock"/></svg>Order now, I'll wait</button>
+            </div>
+            <div id="timeField">
+              <label class="label" for="pickupTime">What time do you want your order?</label>
+              <input class="field" id="pickupTime" type="time">
+              <p class="hint" id="timeHint"></p>
+            </div>
+            <textarea class="field" id="note" rows="2" maxlength="200" placeholder="Note for the kitchen, e.g. no spicy sauce"></textarea>
+            <div class="status" id="status"><svg class="icon"><use href="#i-clock"/></svg><span id="statusText"></span></div>
+            <div class="total"><span>Total</span><strong id="total">0 DA</strong></div>
+            <button class="btn btn-primary block" id="placeOrder" type="button" disabled>Place order <svg class="icon"><use href="#i-arrow"/></svg></button>
+            <p class="fine">You pay at the counter when you pick up. No card details are collected on this page.</p>
+          </div>
+        </div>
+
+        <div class="done" id="trayDone" hidden>
+          <div class="check"><svg class="icon"><use href="#i-check"/></svg></div>
+          <h3>Order <span id="doneId"></span> confirmed</h3>
+          <p>Your tray will be waiting at the ESST counter.</p>
+          <dl>
+            <dt>Pickup time</dt><dd id="donePickup"></dd>
+            <dt>Total to pay</dt><dd id="doneTotal"></dd>
+            <dt>Where</dt><dd>Main building, ground floor</dd>
+          </dl>
+          <button class="btn btn-light block" id="newOrder" type="button">Start a new order</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Hours & location ============ -->
+<section class="hours" id="hours">
+  <div class="wrap hours-grid">
+    <div>
+      <p class="eyebrow">Hours &amp; location</p>
+      <h2>Open when your timetable lets you eat.</h2>
+    </div>
+    <div class="info-cards">
+      <div class="info">
+        <svg class="icon"><use href="#i-clock"/></svg>
+        <small>Opening hours</small>
+        <strong>Sun&ndash;Thu <em>07:30&ndash;17:00</em></strong>
+      </div>
+      <div class="info">
+        <svg class="icon"><use href="#i-pin"/></svg>
+        <small>Pickup counter</small>
+        <strong>Main building, <em>ground floor</em></strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ Footer ============ -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="brand foot-brand">
+      <span class="logo"><img src="images/logo.png" alt="" onerror="this.remove()">esst</span>
+      <span>ESST Restaurant</span>
+    </div>
+    <p class="tag-line">Fresh meals for ESST students, ready and waiting when your lecture ends.</p>
+    <div class="copy">
+      <span>&copy; <span id="year">2026</span> ESST Restaurant &middot; Main building, ground floor &middot; Sun&ndash;Thu 07:30&ndash;17:00</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ Log in (demo) ============ -->
+<dialog id="login" aria-labelledby="loginTitle">
+
+  <!-- Shown when nobody is logged in -->
+  <div id="loginView">
+    <h3 id="loginTitle">Log in</h3>
+    <p>Use your ESST email and password.</p>
+
+    <form id="emailForm" novalidate>
+      <div class="fld">
+        <label class="label" for="loginEmail">Email</label>
+        <input class="field" id="loginEmail" name="email" type="email" inputmode="email" autocomplete="username" maxlength="120" placeholder="you@esst-sup.com" required>
+      </div>
+      <div class="fld">
+        <label class="label" for="loginPassword">Password</label>
+        <div class="pw">
+          <input class="field" id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required>
+          <button class="pw-toggle" id="pwToggle" type="button" aria-controls="loginPassword" aria-pressed="false">Show</button>
+        </div>
+      </div>
+      <p class="msg" id="emailMsg" aria-live="polite"></p>
+      <div class="dlg-actions">
+        <button class="btn btn-primary" type="submit">Log in</button>
+        <button class="btn btn-light" type="button" data-close>Cancel</button>
+      </div>
+    </form>
+
+    <p class="demo-note">Demo only: nothing is sent anywhere and your password is never stored.</p>
+  </div>
+
+  <!-- Shown when somebody is logged in -->
+  <div id="accountView" hidden>
+    <h3 id="accountTitle">You are logged in</h3>
+    <p id="accountInfo"></p>
+    <div class="dlg-actions">
+      <button class="btn btn-primary" id="logoutBtn" type="button">Log out</button>
+      <button class="btn btn-light" type="button" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+
+  /* ---------- Settings you can change ---------- */
+  const OPEN = { from: "07:30", to: "17:00", days: [0, 1, 2, 3, 4] }; // 0 = Sunday ... 4 = Thursday
+  const ENFORCE_OPEN_DAYS = true; // set to false while testing on Friday or Saturday
+
+  /* ---------- Menu data (prices are SAMPLE values, replace with yours) ----------
+     To add a dish: copy one line, give it a unique id, and put a photo in images/<id>.jpg */
+  const CATS = ["Traditional", "Sandwiches", "Pizza & Snacks", "Salads", "Drinks", "Desserts"];
+  const MENU = [
+    { id: "chorba",      name: "Chorba Frik",        cat: "Traditional",    price: 350, prep: 10, desc: "Hearty lamb and green wheat soup with fresh herbs." },
+    { id: "couscous",    name: "Chicken Couscous",   cat: "Traditional",    price: 700, prep: 15, desc: "Steamed semolina, vegetables and tender chicken." },
+    { id: "chakhchoukha",name: "Chakhchoukha",       cat: "Traditional",    price: 650, prep: 15, desc: "Torn flatbread in a rich, spiced sauce." },
+    { id: "rechta",      name: "Rechta",             cat: "Traditional",    price: 600, prep: 15, desc: "Fine noodles in a creamy chicken broth." },
+    { id: "ham-cheese",  name: "Ham & Cheese",       cat: "Sandwiches",     price: 400, prep: 8,  desc: "Ham, cream cheese and chives on fresh bread." },
+    { id: "tuna-sand",   name: "Tuna Sandwich",      cat: "Sandwiches",     price: 350, prep: 8,  desc: "Tuna, tomato, lettuce and a squeeze of lemon." },
+    { id: "panini",      name: "Chicken Panini",     cat: "Sandwiches",     price: 550, prep: 10, desc: "Grilled chicken and melted cheese, pressed hot." },
+    { id: "margherita",  name: "Margherita Pizza",   cat: "Pizza & Snacks", price: 800, prep: 15, desc: "Tomato sauce, mozzarella and fresh basil." },
+    { id: "pepperoni",   name: "Pepperoni Pizza",    cat: "Pizza & Snacks", price: 900, prep: 15, desc: "Mozzarella and pepperoni slices." },
+    { id: "four-cheese", name: "Four Cheese Pizza",  cat: "Pizza & Snacks", price: 950, prep: 15, desc: "Mozzarella, emmental and two more cheeses." },
+    { id: "wings",       name: "Chicken Wings",      cat: "Pizza & Snacks", price: 600, prep: 12, desc: "Crispy wings with a spicy glaze.", spicy: true },
+    { id: "mozza-sticks",name: "Mozzarella Sticks",  cat: "Pizza & Snacks", price: 450, prep: 8,  desc: "Golden outside, stretchy inside." },
+    { id: "green-salad", name: "Green Salad",        cat: "Salads",         price: 300, prep: 5,  desc: "Lettuce, cucumber, tomato and olive oil." },
+    { id: "tuna-salad",  name: "Tuna Salad",         cat: "Salads",         price: 450, prep: 5,  desc: "Tuna, egg, corn and fresh vegetables." },
+    { id: "water",       name: "Water",              cat: "Drinks",         price: 50,  prep: 1,  desc: "Fresh bottled water." },
+    { id: "orange-juice",name: "Orange Juice",       cat: "Drinks",         price: 150, prep: 3,  desc: "Squeezed to order." },
+    { id: "soda",        name: "Soda",               cat: "Drinks",         price: 120, prep: 1,  desc: "Cold can of your choice." },
+    { id: "coffee",      name: "Coffee",             cat: "Drinks",         price: 100, prep: 3,  desc: "Strong and hot." },
+    { id: "mint-tea",    name: "Mint Tea",           cat: "Drinks",         price: 80,  prep: 4,  desc: "Fresh mint, lightly sweet." },
+    { id: "choco-cake",  name: "Chocolate Cake",     cat: "Desserts",       price: 250, prep: 2,  desc: "A rich slice with dark chocolate." },
+    { id: "creme",       name: "Crème Caramel",      cat: "Desserts",       price: 200, prep: 2,  desc: "Silky custard with caramel." },
+    { id: "fruit-cup",   name: "Fruit Cup",          cat: "Desserts",       price: 200, prep: 3,  desc: "Seasonal fruit, fresh-cut." }
+  ];
+  const byId = Object.fromEntries(MENU.map(d => [d.id, d]));
+
+  /* ---------- Helpers ---------- */
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const fmt = n => n.toLocaleString("fr-FR") + " DA";
+  const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+  const toHHMM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
+  };
+
+  /* ---------- State ---------- */
+  let cart = store.get("esst_cart", {});
+  let activeCat = "All";
+  let mode = "class";
+
+  const cartIds = () => Object.keys(cart).filter(id => byId[id] && cart[id] > 0);
+  const cartCount = () => cartIds().reduce((s, id) => s + cart[id], 0);
+  const cartTotal = () => cartIds().reduce((s, id) => s + byId[id].price * cart[id], 0);
+  const prepTime = () => Math.max(10, ...cartIds().map(id => byId[id].prep));
+  const isOpenToday = () => !ENFORCE_OPEN_DAYS || OPEN.days.includes(new Date().getDay());
+  function pickupWindow() {
+    const d = new Date();
+    const now = d.getHours() * 60 + d.getMinutes();
+    return { min: Math.max(now, toMin(OPEN.from)) + prepTime(), max: toMin(OPEN.to) };
+  }
+
+  /* ---------- Rendering ---------- */
+  function renderChips() {
+    const all = ["All", ...CATS];
+    $("#chips").innerHTML = all.map(c => {
+      const n = c === "All" ? MENU.length : MENU.filter(d => d.cat === c).length;
+      return `<button class="chip${c === activeCat ? " active" : ""}" type="button" data-cat="${c}">${c} <b>${n}</b></button>`;
+    }).join("");
+  }
+
+  function dishCard(d) {
+    return `<article class="dish">
+      <div class="dish-img">
+        <span class="dish-ph" aria-hidden="true"><svg class="icon"><use href="#i-fork"/></svg></span>
+        <img src="images/${d.id}.jpg" alt="${d.name}" loading="lazy" onerror="this.remove()">
+        ${d.spicy ? '<span class="tag">Spicy</span>' : ""}
+        <span class="prep"><svg class="icon"><use href="#i-clock"/></svg> ${d.prep} min</span>
+      </div>
+      <div class="dish-body">
+        <h3>${d.name}</h3>
+        <p class="price">${fmt(d.price)}</p>
+        <p class="desc">${d.desc}</p>
+        <button class="add" type="button" data-add="${d.id}" aria-label="Add ${d.name} to your tray">+</button>
+      </div>
+    </article>`;
+  }
+
+  function renderDishes() {
+    const list = activeCat === "All" ? MENU : MENU.filter(d => d.cat === activeCat);
+    $("#dishes").innerHTML = list.length
+      ? list.map(dishCard).join("")
+      : '<p class="empty">Nothing here yet. Check back soon.</p>';
+  }
+
+  function renderTray() {
+    const ids = cartIds();
+    const n = cartCount();
+    $("#trayTitle").textContent = n ? `${n} item${n > 1 ? "s" : ""} on your tray` : "Empty tray";
+    const badge = $("#cartCount");
+    badge.textContent = n;
+    badge.hidden = !n;
+    $("#trayEmpty").hidden = n > 0;
+    $("#trayList").innerHTML = ids.map(id => {
+      const d = byId[id];
+      return `<li>
+        <span class="nm">${d.name}<small>${fmt(d.price)} each</small></span>
+        <span class="qty">
+          <button type="button" data-dec="${id}" aria-label="Remove one ${d.name}">&minus;</button>
+          <b>${cart[id]}</b>
+          <button type="button" data-inc="${id}" aria-label="Add one ${d.name}">+</button>
+        </span>
+      </li>`;
+    }).join("");
+    validate();
+  }
+
+  function validate() {
+    const w = pickupWindow();
+    const tooLate = w.min > w.max;
+    $("#total").textContent = fmt(cartTotal());
+    $("#timeHint").textContent = tooLate
+      ? "Orders for today are closed."
+      : `Any time you like, from ${toHHMM(w.min)} to ${OPEN.to} today, e.g. right after your lecture ends.`;
+
+    let msg = "", ok = false;
+    if (!cartIds().length) msg = "Add a dish to your tray";
+    else if (!isOpenToday()) msg = "We are closed today (open Sun\u2013Thu)";
+    else if (tooLate) msg = "Too late to order for today";
+    else if (mode === "now") { ok = true; msg = `Ready in about ${prepTime()} min, around ${toHHMM(w.min)}`; }
+    else {
+      const v = $("#pickupTime").value;
+      if (!v) msg = "Type your pickup time";
+      else if (toMin(v) < w.min || toMin(v) > w.max) msg = `Pick a time between ${toHHMM(w.min)} and ${OPEN.to}`;
+      else { ok = true; msg = `Ready at ${v}`; }
+    }
+    $("#status").className = "status" + (ok ? " ok" : "");
+    $("#statusText").textContent = msg;
+    $("#placeOrder").disabled = !ok;
+    return ok;
+  }
+
+  function setMode(m) {
+    mode = m;
+    $$(".mode").forEach(b => b.classList.toggle("active", b.dataset.mode === m));
+    $("#timeField").hidden = m === "now";
+    validate();
+  }
+
+  function change(id, delta) {
+    const next = Math.max(0, (cart[id] || 0) + delta);
+    if (next) cart[id] = next; else delete cart[id];
+    store.set("esst_cart", cart);
+    renderTray();
+  }
+
+  /* ---------- Events ---------- */
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-add],[data-inc],[data-dec],[data-cat],[data-mode]");
+    if (!el) return;
+    if (el.dataset.add) change(el.dataset.add, 1);
+    else if (el.dataset.inc) change(el.dataset.inc, 1);
+    else if (el.dataset.dec) change(el.dataset.dec, -1);
+    else if (el.dataset.cat) { activeCat = el.dataset.cat; renderChips(); renderDishes(); }
+    else if (el.dataset.mode) setMode(el.dataset.mode);
+  });
+
+  $("#pickupTime").addEventListener("input", validate);
+
+  $("#placeOrder").addEventListener("click", () => {
+    if (!validate()) return;
+    const ids = cartIds();
+    const total = cartTotal();
+    const pickup = mode === "now" ? toHHMM(pickupWindow().min) : $("#pickupTime").value;
+    const order = {
+      id: "E" + (100 + Math.floor(Math.random() * 900)),
+      pickup,
+      total,
+      items: ids.map(id => ({ id, qty: cart[id] })),
+      note: $("#note").value.trim().slice(0, 200),
+      at: new Date().toISOString()
+    };
+    // Demo only: orders stay in THIS browser. A real canteen needs a server to receive them.
+    const orders = store.get("esst_orders", []);
+    orders.push(order);
+    store.set("esst_orders", orders);
+
+    cart = {};
+    store.set("esst_cart", cart);
+    $("#doneId").textContent = "#" + order.id;
+    $("#donePickup").textContent = pickup;
+    $("#doneTotal").textContent = fmt(total);
+    $("#trayForm").hidden = true;
+    $("#trayDone").hidden = false;
+    $("#note").value = "";
+    $("#pickupTime").value = "";
+    renderTray();
+  });
+
+  $("#newOrder").addEventListener("click", () => {
+    $("#trayDone").hidden = true;
+    $("#trayForm").hidden = false;
+  });
+
+  /* Log in (demo: checks the format only, nothing leaves this page) */
+  const dlg = $("#login");
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function nameFromEmail(email) {
+    const first = email.split("@")[0].split(/[._-]/)[0] || "";
+    return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : "Student";
+  }
+  function currentUser() {
+    const u = store.get("esst_user", null);
+    return u && typeof u === "object" ? u : null;
+  }
+  function renderUser() {
+    const u = currentUser();
+    const lab = $("#loginLabel");
+    lab.textContent = "";
+    if (u) {
+      const hi = document.createElement("span");
+      hi.className = "hi";
+      hi.textContent = "Hi, ";
+      lab.append(hi, u.name);   // text nodes only, so a name can never inject markup
+    } else {
+      lab.textContent = "Log in";
+    }
+  }
+
+  /* Open / close */
+  function resetForms() {
+    $("#emailForm").reset();
+    $("#emailMsg").textContent = "";
+    $("#loginPassword").type = "password";
+    $("#pwToggle").textContent = "Show";
+    $("#pwToggle").setAttribute("aria-pressed", "false");
+  }
+  function openLogin() {
+    const u = currentUser();
+    $("#loginView").hidden = !!u;
+    $("#accountView").hidden = !u;
+    if (u) {
+      $("#accountInfo").textContent = u.email;
+    } else {
+      resetForms();
+    }
+    if (typeof dlg.showModal === "function" && !dlg.open) dlg.showModal();
+    if (!u) $("#loginEmail").focus();
+  }
+  $("#loginBtn").addEventListener("click", openLogin);
+  $$("[data-close]", dlg).forEach(b => b.addEventListener("click", () => dlg.close()));
+  dlg.addEventListener("close", () => resetForms());
+
+  function finishLogin(user) {
+    store.set("esst_user", user);   // never the password
+    renderUser();
+    dlg.close();
+  }
+
+  /* Email + password */
+  $("#pwToggle").addEventListener("click", () => {
+    const f = $("#loginPassword");
+    const show = f.type === "password";
+    f.type = show ? "text" : "password";
+    $("#pwToggle").textContent = show ? "Hide" : "Show";
+    $("#pwToggle").setAttribute("aria-pressed", String(show));
+  });
+  $("#emailForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = $("#emailMsg");
+    const email = $("#loginEmail").value.trim().toLowerCase();
+    const pw = $("#loginPassword").value;
+    msg.classList.remove("ok");
+    if (!EMAIL_RE.test(email)) {
+      msg.textContent = "Please enter a valid email, like you@esst-sup.com.";
+      $("#loginEmail").focus();
+      return;
+    }
+    if (pw.length < 8) {
+      msg.textContent = "Your password needs at least 8 characters.";
+      $("#loginPassword").focus();
+      return;
+    }
+    finishLogin({ method: "email", name: nameFromEmail(email), email });
+  });
+
+  /* Log out */
+  $("#logoutBtn").addEventListener("click", () => { store.set("esst_user", ""); renderUser(); dlg.close(); });
+
+  /* Highlight the current section in the nav */
+  const links = $$(".nav-links a");
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  ["how", "menu", "hours"].forEach(id => io.observe(document.getElementById(id)));
+
+  /* ---------- Start ---------- */
+  $("#year").textContent = new Date().getFullYear();
+  renderChips();
+  renderDishes();
+  renderUser();
+  renderTray();
+  setMode("class");
+})();
+</script>
+</body>
+</html>
